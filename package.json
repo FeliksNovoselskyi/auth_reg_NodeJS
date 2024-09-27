@@ -1,0 +1,24 @@
+{
+  "name": "node_web_app",
+  "version": "1.0.0",
+  "description": "web app on nodejs for learn and practice",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "node"
+  ],
+  "author": "Author Surname <email@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "path": "^0.12.7",
+    "request": "^2.88.2"
+  },
+  "type": "module"
+}

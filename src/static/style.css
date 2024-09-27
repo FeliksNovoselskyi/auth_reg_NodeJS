@@ -1,0 +1,44 @@
+* {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 5px 15px;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 10px;
+    gap: 10px;
+}
+
+.link-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.link-bar a {
+    text-decoration: none;
+}
+
+.account-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 400px;
+    gap: 10px
+}
+
+.error-message {
+    color: red;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="link-bar">
+            <a href="/">Main</a>
+            <a href="/contacts/">Contacts</a>
+            <a href="/auth/">Auth</a>
+        </div>
+    </header>
+
+    <main>
+        <h2>Registration</h2>
+        <p>You already have an account? <a href="/auth/">Sign in</a></p>
+
+        <% if (error) { %>
+            <div class="error-message"><%= error %></div>
+        <% } %>
+
+        <form action="/reg" class="account-form" method="post">
+            <input type="text" name="username" placeholder="Your name">
+            <input type="password" name="password" placeholder="Your password">
+            <input type="password" name="confirmPassword" placeholder="Confirm your password">
+
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+</body>
+</html>
