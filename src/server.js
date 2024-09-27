@@ -48,6 +48,31 @@ app.get('/reg', async (req, res) => {
     res.render('reg', {error: null})
 })
 
+// Post requests during registration
+app.post('/reg', async (req, res) => {
+    context = {}
+    // try {
+    //     if (req.query.username) {
+        
+    //     }
+    // } catch {
+        
+    // }
+
+    const {username, password, confirmPassword} = req.body
+    // console.log(username, password, confirmPassword)
+
+    if (!username || !password || !confirmPassword) {
+        context.error = 'You must fill all inputs for registration' 
+    } else if (password !== confirmPassword) {
+        context.error = 'Passwords are not confirming' 
+    } else {   
+        context.error = null
+    }
+    
+    return res.render('reg', context)
+})
+
 app.listen(PORT, HOST, () => {
     console.log(`Server started on http://${HOST}:${PORT}`)
 })
