@@ -18,7 +18,11 @@
         <h2>Authorization</h2>
         <p>You don't have any account? <a href="/reg/">Create</a></p>
 
-        <form action="" class="account-form">
+        <% if (error) { %>
+            <div class="error-message"><%= error %></div>
+        <% } %>
+
+        <form action="/auth" class="account-form" method="post">
             <input type="text" name="username" placeholder="Your name">
             <input type="password" name="password" placeholder="Your password">
 
