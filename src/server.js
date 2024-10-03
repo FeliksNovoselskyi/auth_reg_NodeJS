@@ -66,6 +66,7 @@ app.get('/auth', (req, res) => {
     utilsFuncs.getUsername(req, context)
 
     context.error = null
+    context.session = req.session
 
     return res.render('auth', context)
 })
@@ -74,33 +75,48 @@ app.get('/auth', (req, res) => {
 app.post('/auth', (req, res) => {
     context = {}
 
-    const {username, password} = req.body
-
-    if (!username || !password) {
-        context.error = 'You must fill all inputs for authorization'
-        return res.render('auth', context)
-    }
-    dataBaseFuncs.getUser(username, (user) => {
-        bcrypt.compare(password, user.password, (error, result) => {
+    const {username, password, action} = req.body
+    
+    if (action === 'login') {
+        if (!username || !password) {
+            context.error = 'You must fill all inputs for authorization'
+            context.username = null
+            context.session = null
+            return res.render('auth', context)
+        }
+        dataBaseFuncs.getUser(username, (user) => {
+            bcrypt.compare(password, user.password, (error, result) => {
+                if (error) {
+                    console.log(error)
+                    return res.render('auth', context)
+                }
+                
+                if (result) {
+                    req.session.user = {
+                        username: user.username
+                    }
+    
+                    context.error = null
+                    context.session = req.session
+                    context.username = req.session.user.username
+                } else {
+                    context.error = 'Password incorrect'
+                    context.username = null
+                    context.session = null
+                }
+    
+                return res.render('auth', context)
+            })
+        })
+    } else if (action === 'logout') {
+        req.session.destroy(function (error) {
             if (error) {
                 console.log(error)
-                return res.render('auth', context)
-            }
-            
-            if (result) {
-                req.session.user = {
-                    username: user.username
-                }
-
-                context.error = null
-                context.username = req.session.user.username
             } else {
-                context.error = 'Password incorrect'
+                return res.redirect('/')
             }
-
-            return res.render('auth', context)
         })
-    })
+    }
 })
 
 // Register
@@ -121,11 +137,14 @@ app.post('/reg', (req, res) => {
     const {username, password, confirmPassword} = req.body
 
     if (!username || !password || !confirmPassword) {
-        context.error = 'You must fill all inputs for registration' 
+        context.error = 'You must fill all inputs for registration'
+        context.username = null
     } else if (password !== confirmPassword) {
-        context.error = 'Passwords are not confirming' 
+        context.error = 'Passwords are not confirming'
+        context.username = null
     } else if (password.length > 8) {
         context.error = 'Password must less then 8 symbols'
+        context.username = null
     } else {   
         context.error = null
 
@@ -145,7 +164,8 @@ app.post('/reg', (req, res) => {
             })
         })
     }
-    
+    context.username = null
+
     return res.render('reg', context)
 })
 

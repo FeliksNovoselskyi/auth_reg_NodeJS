@@ -31,7 +31,13 @@
             <input type="password" name="password" placeholder="Your password">
 
             <!-- <button type="submit" name="leave_btn">Leave</button> -->
-            <button type="submit" name="auth_btn">Submit</button>
+            <button type="submit" name="action" value="login">Submit</button>
+
+            <% if (session) { %>
+                <% if (session.user) { %>
+                    <button type="submit" name="action" value="logout">Logout</button>
+                <% } %>
+            <% } %>
         </form>
     </main>
 </body>
