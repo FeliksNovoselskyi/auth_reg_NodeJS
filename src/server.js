@@ -2,6 +2,7 @@
 import dotenv from 'dotenv' 
 import express from 'express'
 import bcrypt from 'bcrypt'
+import session from 'express-session'
 
 import {fileURLToPath} from 'url'
 import {dirname, join} from 'path'
@@ -12,6 +13,12 @@ import * as dataBaseFuncs from './database.js'
 dotenv.config({path: '../.env'})
 
 const app = express()
+
+app.use(session({
+    secret: 'lalalalalalala',
+    resave: false,
+    saveUninitialized: false,
+}))
 
 app.use(express.urlencoded({extended: true}))
 
@@ -46,7 +53,21 @@ app.get('/contacts', (req, res) => {
 
 // Authorize
 app.get('/auth', (req, res) => {
-    res.render('auth', {error: null})
+    context = {}
+    
+    const userData = req.session.user
+
+    console.log(userData)
+
+    if (userData) {
+        context.error = userData.username
+    } else {
+        context.error = null
+    }
+
+    console.log(context.error)
+
+    return res.render('auth', context)
 })
 
 // Authorization post requests
@@ -68,6 +89,11 @@ app.post('/auth', (req, res) => {
             
             if (result) {
                 console.log('Succesful')
+
+                req.session.user = {
+                    username: user.username
+                }
+
                 context.error = null
             } else {
                 context.error = 'Password incorrect'
