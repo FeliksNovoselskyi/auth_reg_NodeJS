@@ -9,6 +9,7 @@ import {dirname, join} from 'path'
 
 // My scripts
 import * as dataBaseFuncs from './database.js'
+import * as utilsFuncs from './utils.js'
 
 dotenv.config({path: '../.env'})
 
@@ -38,7 +39,11 @@ app.set('views', './templates')
 app.use('/static/', express.static(join(__dirname, 'static')))
 
 app.get('/', (req, res) => {
-    res.render('index')
+    context = {}
+
+    utilsFuncs.getUsername(req, context)
+
+    res.render('index', context)
 })
 
 app.get('/contacts', (req, res) => {
@@ -48,6 +53,9 @@ app.get('/contacts', (req, res) => {
         country: "Ukraine UA",
         year: "2024"
     }
+
+    utilsFuncs.getUsername(req, context)
+
     res.render('contacts', context)
 })
 
@@ -55,17 +63,9 @@ app.get('/contacts', (req, res) => {
 app.get('/auth', (req, res) => {
     context = {}
     
-    const userData = req.session.user
+    utilsFuncs.getUsername(req, context)
 
-    console.log(userData)
-
-    if (userData) {
-        context.error = userData.username
-    } else {
-        context.error = null
-    }
-
-    console.log(context.error)
+    context.error = null
 
     return res.render('auth', context)
 })
@@ -88,13 +88,12 @@ app.post('/auth', (req, res) => {
             }
             
             if (result) {
-                console.log('Succesful')
-
                 req.session.user = {
                     username: user.username
                 }
 
                 context.error = null
+                context.username = req.session.user.username
             } else {
                 context.error = 'Password incorrect'
             }
@@ -106,7 +105,13 @@ app.post('/auth', (req, res) => {
 
 // Register
 app.get('/reg', (req, res) => {
-    res.render('reg', {error: null})
+    context = {}
+
+    utilsFuncs.getUsername(req, context)
+
+    context.error = null
+    
+    res.render('reg', context)
 })
 
 // Post requests during registration

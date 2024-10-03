@@ -12,6 +12,10 @@
             <a href="/">Main</a>
             <a href="/contacts/">Contacts</a>
         </div>
+
+        <% if (username) { %>
+            <p class="user-session-name"><%=username %></p>
+        <% } %>
     </header>
 
     <main>
@@ -19,7 +23,7 @@
         <p>You don't have any account? <a href="/reg/">Create</a></p>
 
         <% if (error) { %>
-            <div class="error-message"><%= error %></div>
+            <p class="error-message"><%= error %></p>
         <% } %>
 
         <form action="/auth" class="account-form" method="post">
