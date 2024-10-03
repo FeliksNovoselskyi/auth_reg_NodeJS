@@ -50,39 +50,41 @@ app.get('/auth', (req, res) => {
 })
 
 // Authorization post requests
-app.post('/auth', async (req, res) => {
+app.post('/auth', (req, res) => {
     context = {}
 
     const {username, password} = req.body
 
     if (!username || !password) {
         context.error = 'You must fill all inputs for authorization'
-    } else {
-        dataBaseFuncs.getUser(username, async (user) => {
-            bcrypt.compare(password, user.password, (error, result) => {
-                if (error) {
-                    console.log(error)
-                }
-                
-                if (result) {
-                    console.log('Succesful') // TODO: Fix error logs
-                    return context.error = null
-                } else {
-                    return context.error = 'Password incorrect'
-                }
-            })
-        })
+        return res.render('auth', context)
     }
-    return res.render('auth', context)
+    dataBaseFuncs.getUser(username, (user) => {
+        bcrypt.compare(password, user.password, (error, result) => {
+            if (error) {
+                console.log(error)
+                return res.render('auth', context)
+            }
+            
+            if (result) {
+                console.log('Succesful')
+                context.error = null
+            } else {
+                context.error = 'Password incorrect'
+            }
+
+            return res.render('auth', context)
+        })
+    })
 })
 
 // Register
-app.get('/reg', async (req, res) => {
+app.get('/reg', (req, res) => {
     res.render('reg', {error: null})
 })
 
 // Post requests during registration
-app.post('/reg', async (req, res) => {
+app.post('/reg', (req, res) => {
     context = {}
 
     const {username, password, confirmPassword} = req.body
